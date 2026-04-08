@@ -61,6 +61,12 @@ python shred_v2.py
 
 ---
 
+## 💬 Quick Interaction (`ragchat.py`)
+
+If you want a "quick and dirty" way to talk to your documents without the full stress-test TUI, use `ragchat.py`. It provides a simple command-line interface for direct RAG queries, making it ideal for verifying that your ingestion worked or for performing individual lookups.
+
+---
+
 ## 📥 Data Ingestion (`ingest.py`)
 
 Before you can shred, you need data. This script processes any PDFs in the root directory.
