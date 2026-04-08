@@ -16,6 +16,7 @@ This project is a high-performance demonstration of how to run massively paralle
     1.  Embeds a random query.
     2.  Searches the Qdrant vector database.
     3.  Streams a response from the Granite-4.0-h-micro model.
+- **Data Diversity & Context Switching:** The demo utilizes a mix of dense technical manuals and George Orwell's *1984*. By switching between technical architecture queries and dystopian narrative concepts, the script forces massive context switching in both the vLLM KV-cache and the Qdrant retrieval engine. This ensures the benchmarks reflect genuine "cold" processing power rather than relying on repetitive cache hits.
 - **Live Metrics:** Monitors TPS (Tokens/sec), RPS (Requests/sec), TTFT (Time to First Token), and DB Latency.
 - **GPU Telemetry:** Direct integration with `nvidia-smi` to show VRAM and Core utilization during the "shred."
 - **Efficiency Multiplier:** At the end of the run, it calculates how much faster the workload completed compared to traditional serial processing (Ollama-style).
