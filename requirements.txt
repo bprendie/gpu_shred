@@ -1,0 +1,5 @@
+pymupdf
+qdrant-client
+requests
+sentence-transformers
+tqdm

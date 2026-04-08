@@ -1,0 +1,86 @@
+services:
+  vllm:
+    image: vllm/vllm-openai:v0.14.0
+    container_name: vllm-granite
+    runtime: nvidia
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./hf-cache:/root/.cache/huggingface
+    environment:
+      - VLLM_USE_V1=0  # Keeping V0 for maximum stability on consumer hardware
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: all
+              capabilities: [gpu]
+    command: 
+      - "ibm-granite/granite-4.0-h-micro"
+      - "--host"
+      - "0.0.0.0"
+      - "--trust-remote-code"
+      - "--gpu-memory-utilization"
+      - "0.8"            
+    restart: "no"
+
+  vllm_embed:
+    image: vllm/vllm-openai:v0.14.0
+    container_name: vllm-granite-embed
+    runtime: nvidia
+    ports:
+      - "8001:8000"
+    volumes:
+      - ./hf-cache:/root/.cache/huggingface
+    environment:
+      - VLLM_USE_V1=0
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: all
+              capabilities: [gpu]
+    command: 
+      - "ibm-granite/granite-embedding-125m-english"
+      - "--host"
+      - "0.0.0.0"
+      - "--trust-remote-code"
+      - "--gpu-memory-utilization"
+      - "0.1"             # Increased to 10% (1.6GB) for high-performance embedding
+      - "--max-model-len"
+      - "512"
+      - "--enforce-eager"
+    restart: "no"
+
+  qdrant:
+    image: qdrant/qdrant
+    container_name: qdrant
+    restart: "no"
+    ports:
+      - "6333:6333"
+    volumes:
+      - qdrant_data:/qdrant/storage
+
+  open-webui:
+    image: ghcr.io/open-webui/open-webui:main
+    container_name: open-webui
+    restart: "no"
+    ports:
+      - "3004:8080"
+    volumes:
+      - ./webui-data:/app/backend/data
+    environment:
+      - WEBUI_AUTH=False
+      - OPENAI_API_BASE_URL=http://vllm-granite:8000/v1
+      - OPENAI_API_KEY=dummy-key
+      - VECTOR_DB=qdrant
+      - QDRANT_URI=http://qdrant:6333
+      - RAG_EMBEDDING_ENGINE=openai
+      - RAG_OPENAI_API_BASE_URL=http://vllm-granite-embed:8000/v1
+      - RAG_OPENAI_API_KEY=dummy-key
+      - RAG_EMBEDDING_MODEL=ibm-granite/granite-embedding-125m-english
+
+volumes:
+  qdrant_data:
