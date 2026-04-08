@@ -6,6 +6,35 @@ This project is a high-performance demonstration of how to run massively paralle
 
 ---
 
+## 🛠️ Setup & Installation
+
+### 1. Prerequisites
+- **OS:** Linux (Ubuntu recommended)
+- **Hardware:** NVIDIA GPU (8GB+ VRAM) with [NVIDIA Container Toolkit](https://docs.nvidia.com/datacenter/cloud-native/container-toolkit/install-guide.html) installed.
+- **Software:** Docker & Docker Compose.
+
+### 2. Environment Setup
+We recommend using a Python virtual environment to keep your system clean:
+
+```bash
+# Create the virtual environment
+python3 -m venv .venv
+
+# Activate it
+source .venv/bin/activate
+
+# Install the necessary libraries
+pip install -r requirements.txt
+```
+
+### 3. Launch the Infrastructure
+```bash
+docker compose up -d
+```
+*Note: The first run will download several GBs of model weights into `./hf-cache`.*
+
+---
+
 ## 🚀 The Main Event: `shred_v2.py`
 
 `shred_v2.py` is a specialized stress-testing TUI (Terminal User Interface) designed to push the Granite models to their absolute limit.
